@@ -17,7 +17,7 @@
  * so without this bump users would keep the previous CSS/JS for a full reload
  * cycle after a deploy.
  */
-const VERSION = 'v3';
+const VERSION = 'v4';
 const CACHE = `fitpulse-${VERSION}`;
 
 /** The app shell. Keep this list in sync with the file tree. */

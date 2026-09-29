@@ -166,6 +166,13 @@ canvas {
   padding: 0 var(--sp-4) var(--sp-10);
 }
 
+/* The dashboard is the only view without a topbar, so without this its first
+   card would sit flush against the top edge while every other screen has a
+   header with clearance above it. */
+.view:not(:has(> .topbar)) {
+  padding-top: var(--top-gap);
+}
+
 /* topbar */
 .topbar {
   position: sticky;

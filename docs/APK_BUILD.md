@@ -136,6 +136,42 @@ Adaptive-icon foreground рисуется в безопасной зоне 72/10
 
 ---
 
+## Системные панели и edge-to-edge
+
+`targetSdk 35` на Android 15+ включает edge-to-edge принудительно: окно
+растягивается под статус-бар и жестовую навигацию. Два последствия, из-за
+которых вёрстка «уезжает», и оба закрыты в репозитории:
+
+1. **`android.adjustMarginsForEdgeToEdge: "auto"`** в `capacitor.config.json`.
+   Значение по умолчанию — `"disable"`, при котором `CapacitorWebView` вообще не
+   трогает WebView, и контент оказывается под системными панелями. С `"auto"`
+   Capacitor применяет к WebView отступы system bars и выреза (display cutout)
+   на Android 15+, а на более старых версиях не меняет ничего. WebView не
+   отдаёт системные панели в CSS, поэтому `env(safe-area-inset-*)` в WebView
+   всегда `0` — в этом режиме CSS-переменные `--safe-t`/`--safe-b` корректно
+   равны нулю, и все отступы в стилях не схлопываются.
+
+2. **Фон окна.** `AppTheme.NoActionBar` в шаблоне содержал
+   `android:background="@null"`, а `AppTheme.NoActionBarLaunch` остаётся темой
+   активности навсегда — Capacitor не вызывает `SplashScreen.installSplashScreen()`.
+   Как только WebView перестаёт закрывать окно целиком, в панелях было видно
+   либо ничего, либо splash-картинку. Теперь фон окна задан явно
+   (`@color/app_window_background`, синхронизирован с токеном `bg-0`), а
+   `MainActivity` вызывает `SplashScreen.installSplashScreen(this)` до
+   `super.onCreate()`, чтобы тема переключалась на `AppTheme.NoActionBar` через
+   `postSplashScreenTheme`.
+
+Иконки системных панелей принудительно светлые (`windowLightStatusBar=false`) —
+приложение по умолчанию тёмное, фон окна `#070810`.
+
+> Светлая тема (`[data-theme='light']`) в панелях остаётся тёмной: цвет окна —
+> одна нативная величина, а тема живёт в `localStorage` и нативному слою
+> недоступна. Чтобы панель шла за темой, нужен `@capacitor/status-bar` и
+> синхронизация `StatusBar.setStyle/setBackgroundColor` из `js/core/theme.js` —
+> плагина в проекте нет, а его JS-обёртка не резолвится без бандлера.
+
+---
+
 ## Release-подпись
 
 При первом `npm run apk:release` создаётся keystore в

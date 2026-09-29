@@ -3,21 +3,30 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/app_window_background</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:background">@null</item>
+        <!-- Was @null: a transparent window background left the system bar
+             areas unpainted once the WebView stopped covering them. -->
+        <item name="android:windowBackground">@color/app_window_background</item>
+        <item name="android:statusBarColor">@color/app_window_background</item>
+        <item name="android:navigationBarColor">@color/app_window_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
-
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="android:background">@drawable/splash</item>
+        <!-- Switch to the real theme once the splash is gone, otherwise this
+             launch theme stays active and its splash background shows in the
+             system bar insets. -->
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
         <!-- Android 12+ draws its own splash; keep it dark instead of letting
              the system derive a light background from the app theme. -->
         <item name="windowSplashScreenBackground">@color/splash_background</item>

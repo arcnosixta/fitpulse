@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Window background behind the WebView. Kept in sync with the bg-0 token
+         in styles/tokens.css so the system bar areas do not show a lighter
+         band than the page body. -->
+    <color name="app_window_background">#070810</color>
+</resources>

@@ -68,7 +68,11 @@
 
   --text-1: #f2f4fb;
   --text-2: #a8b0c7;
-  --text-3: #6f7793;
+  /* #6f7793 never reached 4.5:1 on any surface in this theme — it needed a
+     background with negative luminance. 12px labels, stat captions and input
+     suffixes all sit on the light --surface-2, so this is now the dimmest
+     value that still clears WCAG AA there (4.57:1). */
+  --text-3: #979eb3;
   --text-inv: #07080f;
 
   --ok: #2ee6a8;
@@ -144,7 +148,7 @@
 
   --text-1: #0d1120;
   --text-2: #4a5470;
-  --text-3: #7d87a1;
+  --text-3: #606a84;
   --text-inv: #ffffff;
 
   --ok: #0aa876;

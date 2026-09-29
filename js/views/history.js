@@ -4,7 +4,7 @@ import { h, mount, icon } from '../core/dom.js';
 import { t } from '../core/i18n.js';
 import { num, weight as fmtWeight, minutes, relativeDay, DOW, formatDate } from '../core/format.js';
 import { refresh } from '../core/router.js';
-import { enterView, stagger } from '../core/anim.js';
+import { stagger } from '../core/anim.js';
 import { openSheet } from '../core/ui.js';
 import { section, stat, empty } from '../ui/bits.js';
 import { barChart } from '../ui/charts.js';
@@ -63,7 +63,7 @@ function openLog(log) {
   });
 }
 
-export function render(_params, _ctx) {
+export function render(_params, ctx) {
   const view = h('div.view');
   const logs = logsSorted();
   const months = [...new Set(logs.map((l) => monthKey(l.date)))];
@@ -181,7 +181,6 @@ export function render(_params, _ctx) {
           })
         )
   );
-  enterView(view);
-  stagger(view.querySelectorAll('.card, .list__item'));
+  if (ctx.routeChanged) stagger(view.querySelectorAll('.card, .list__item'));
   return view;
 }

@@ -14,13 +14,6 @@ export function play(el, className) {
   el.addEventListener('animationend', () => el.classList.remove(className), { once: true });
 }
 
-/** View container entry animation. */
-export function enterView(el) {
-  if (!el) return el;
-  if (!reducedMotion()) el.classList.add('view');
-  return el;
-}
-
 /** Staggered entrance. Accepts one element, a NodeList or an array. */
 export function stagger(els) {
   const list = toElementList(els);

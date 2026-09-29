@@ -5,7 +5,6 @@ import { t } from '../core/i18n.js';
 import { getState } from '../core/store.js';
 import { num, currentUnits, toDisplayWeight, fromDisplayWeight, formatTime, minutes } from '../core/format.js';
 import { navigate, refresh } from '../core/router.js';
-import { enterView } from '../core/anim.js';
 import { openModal, openSheet, confirmDialog, toastOk, toastErr, haptic } from '../core/ui.js';
 import { empty, plateStrip, stat } from '../ui/bits.js';
 import { openExerciseSheet, openExercisePicker, exerciseGlyph, isFav, toggleFav } from '../ui/exercise.js';
@@ -506,7 +505,6 @@ export function render(params) {
         })
       )
     );
-    enterView(view);
     return view;
   }
 
@@ -593,6 +591,5 @@ export function render(params) {
       h('span.spacer')
     )
   );
-  enterView(view);
   return view;
 }

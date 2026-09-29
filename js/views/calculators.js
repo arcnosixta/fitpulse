@@ -5,7 +5,6 @@ import { t } from '../core/i18n.js';
 import { getState, update } from '../core/store.js';
 import { num, currentUnits, toDisplayWeight, fromDisplayWeight, toDisplayLength, fromDisplayLength, round } from '../core/format.js';
 import { navigate, refresh } from '../core/router.js';
-import { enterView } from '../core/anim.js';
 import { section, stat, plateStrip } from '../ui/bits.js';
 import { donut } from '../ui/charts.js';
 import { targets, weeklyTrainingMinutes } from '../core/nutrition.js';
@@ -519,7 +518,7 @@ function bfTool() {
 /* ------------------------------ view ------------------------------ */
 const TOOL_FN = { bmr: bmrTool, macro: macroTool, one: oneRmTool, plates: platesTool, bmi: bmiTool, bf: bfTool };
 
-export function render(_params, _ctx) {
+export function render(_params, ctx) {
   const view = h('div.view');
   const p = getState().profile;
   if (draft.weight === 80 && p.weight) draft.weight = p.weight;
@@ -551,6 +550,5 @@ export function render(_params, _ctx) {
     ),
     h('div.section', TOOL_FN[tool]())
   );
-  enterView(view);
   return view;
 }

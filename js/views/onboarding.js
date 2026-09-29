@@ -5,10 +5,9 @@ import { t, getLang } from '../core/i18n.js';
 import { getState, patch, update } from '../core/store.js';
 import { num, currentUnits, toDisplayLength, fromDisplayLength, toDisplayWeight, fromDisplayWeight, DOW } from '../core/format.js';
 import { navigate, refresh } from '../core/router.js';
-import { enterView } from '../core/anim.js';
 import { toastOk, haptic } from '../core/ui.js';
 import { stat } from '../ui/bits.js';
-import { segmented } from '../ui/forms.js';
+import { segmented, radioCards, choiceGroup } from '../ui/forms.js';
 import { GOALS, computeTargets } from '../calc/macros.js';
 import { ACTIVITY_LEVELS, computeBmr, computeTdee } from '../calc/body.js';
 import { TEMPLATES, TEMPLATE_BY_ID } from '../data/templates.js';
@@ -16,6 +15,8 @@ import { applyTemplate, tplName } from '../core/session.js';
 
 let step = 0;
 let draft = null;
+/** Set from the route: #/onboarding?edit=1 reopens the wizard to correct data. */
+let editMode = false;
 
 const goalLabel = (g) => (getLang() === 'en' ? g.en || g.n : g.n);
 const actLabel = (a) => (getLang() === 'en' ? a.en : a.n);
@@ -61,6 +62,13 @@ const numInput = (value, onChange, stepv, suffix) => {
 
 /* ------------------------------ steps ------------------------------ */
 function stepProfile() {
+  const actHint = h('div.field__hint');
+  const paintActHint = () => {
+    const a = ACTIVITY_LEVELS.find((x) => x.id === draft.activity);
+    if (a) actHint.textContent = `${getLang() === 'en' ? a.hint : a.hint} · k=${a.k}`;
+  };
+  paintActHint();
+
   return h(
     'div.stack',
     field(t('onb.name'), h('input.input', {
@@ -78,7 +86,7 @@ function stepProfile() {
           ['female', t('onb.female')],
         ],
         draft.sex,
-        (id) => { draft.sex = id; refresh(); }
+        (id) => { draft.sex = id; }
       )
     ),
     h(
@@ -94,21 +102,15 @@ function stepProfile() {
     h(
       'div.field',
       h('span.field__label', t('onb.activity')),
-      h(
-        'div.chips',
-        ...ACTIVITY_LEVELS.map((a) =>
-          h(
-            'button.chip',
-            {
-              'aria-pressed': String(a.id === draft.activity),
-              title: getLang() === 'en' ? a.hint : a.hint,
-              onclick: () => { draft.activity = a.id; refresh(); },
-            },
-            actLabel(a)
-          )
-        )
-      ),
-      h('div.field__hint', `${actLabel(ACTIVITY_LEVELS.find((a) => a.id === draft.activity))} · k=${ACTIVITY_LEVELS.find((a) => a.id === draft.activity).k}`)
+      choiceGroup({
+        options: ACTIVITY_LEVELS.map((a) => [a.id, actLabel(a)]),
+        value: draft.activity,
+        onPick: (id) => { draft.activity = id; paintActHint(); },
+        className: 'chips',
+        optionClass: 'chip',
+        label: t('onb.activity'),
+      }),
+      actHint
     )
   );
 }
@@ -119,23 +121,14 @@ function stepGoal() {
     h(
       'div.field',
       h('span.field__label', t('onb.goal')),
-      h(
-        'div.stack',
-        ...GOALS.map((g) =>
-          h(
-            'button.radio-card',
-            {
-              'aria-pressed': String(g.id === draft.goal),
-              onclick: () => { draft.goal = g.id; refresh(); },
-            },
-            h('span.radio-card__dot'),
-            h(
-              'div',
-              h('div.setting__title', goalLabel(g)),
-              h('div.setting__sub', `${g.delta > 0 ? '+' : ''}${Math.round(g.delta * 100)}% kcal · ${g.rate * 100}% mass/week`)
-            )
-          )
-        )
+      radioCards(
+        GOALS.map((g) => [
+          g.id,
+          goalLabel(g),
+          `${g.delta > 0 ? '+' : ''}${Math.round(g.delta * 100)}% kcal · ${g.rate * 100}% mass/week`,
+        ]),
+        draft.goal,
+        (id) => { draft.goal = id; }
       )
     )
   );
@@ -150,55 +143,59 @@ function stepSummary() {
     tdee: tdee.tdee,
     meals: getState().profile.meals ?? 4,
   });
-  const selected = TEMPLATE_BY_ID[draft.templateId];
+
+  const note = h('p.formula-note');
+  const paintNote = () => {
+    const sel = TEMPLATE_BY_ID[draft.templateId];
+    note.textContent = sel ? sel.desc : '';
+    note.hidden = !sel;
+  };
+
+  const group = choiceGroup({
+    options: TEMPLATES.map((tpl) => [tpl.id, tpl]),
+    value: draft.templateId,
+    onPick: (id) => { draft.templateId = id; paintNote(); },
+    className: 'stack',
+    optionClass: 'tpl-card',
+    label: t('onb.pickTemplate'),
+    renderOption: ([, tpl]) => [
+      h('div.tpl-card__name', tplName(tpl)),
+      h('div.tpl-card__meta', `${tpl.level} · ${tpl.days.length} ${t('dash.days')} · ${tpl.perWeek}×/week`),
+      h(
+        'div.tpl-card__days',
+        ...Array.from({ length: 7 }, (_, i) =>
+          h(`div.tpl-card__day${tpl.days.some((d) => d.dow === i) ? ' is-on' : ''}`, DOW()[i])
+        )
+      ),
+    ],
+    onRender: () => paintNote(),
+  });
+  paintNote();
+
+  const result = h(
+    'div.onb__result',
+    h(
+      'div.grid.grid--3',
+      stat({ label: t('onb.bmr'), value: num(bmr.average), unit: t('common.kcal') }),
+      stat({ label: t('onb.tdee'), value: num(tdee.tdee), unit: t('common.kcal') }),
+      stat({ label: t('onb.calories'), value: num(r.kcal), unit: t('common.kcal') })
+    ),
+    h(
+      'div.grid.grid--3',
+      stat({ label: t('common.protein'), value: num(r.macros.protein), unit: 'g' }),
+      stat({ label: t('common.fat'), value: num(r.macros.fat), unit: 'g' }),
+      stat({ label: t('common.carbs'), value: num(r.macros.carbs), unit: 'g' })
+    )
+  );
+
+  // Re-entering the wizard to fix a number must not offer to rebuild the program.
+  if (editMode) return h('div.stack', result);
 
   return h(
     'div.stack',
-    h(
-      'div.onb__result',
-      h(
-        'div.grid.grid--3',
-        stat({ label: t('onb.bmr'), value: num(bmr.average), unit: t('common.kcal') }),
-        stat({ label: t('onb.tdee'), value: num(tdee.tdee), unit: t('common.kcal') }),
-        stat({ label: t('onb.calories'), value: num(r.kcal), unit: t('common.kcal') })
-      ),
-      h(
-        'div.grid.grid--3',
-        stat({ label: t('common.protein'), value: num(r.macros.protein), unit: 'g' }),
-        stat({ label: t('common.fat'), value: num(r.macros.fat), unit: 'g' }),
-        stat({ label: t('common.carbs'), value: num(r.macros.carbs), unit: 'g' })
-      )
-    ),
-    h(
-      'div.field',
-      h('span.field__label', t('onb.pickTemplate')),
-      h(
-        'div.stack',
-        ...TEMPLATES.map((tpl) =>
-          h(
-            'button.tpl-card',
-            {
-              'aria-pressed': String(tpl.id === draft.templateId),
-              onclick: () => { draft.templateId = tpl.id; refresh(); },
-            },
-            h('div.tpl-card__name', tplName(tpl)),
-            h('div.tpl-card__meta', `${tpl.level} · ${tpl.days.length} ${t('dash.days')} · ${tpl.perWeek}×/week`),
-            h(
-              'div.tpl-card__days',
-              ...Array.from({ length: 7 }, (_, i) =>
-                h(`div.tpl-card__day${tpl.days.some((d) => d.dow === i) ? ' is-on' : ''}`, DOW()[i])
-              )
-            )
-          )
-        )
-      )
-    ),
-    selected
-      ? h(
-          'p.formula-note',
-          `${selected.desc}`
-        )
-      : null
+    result,
+    h('div.field', h('span.field__label', t('onb.pickTemplate')), group),
+    note
   );
 }
 
@@ -210,7 +207,9 @@ function commit() {
     profile: { ...getState().profile, ...profile },
     active: null,
   });
-  if (draft.templateId) {
+  // In edit mode the user only came to correct their numbers, so the existing
+  // program is left alone instead of being rebuilt from a template.
+  if (!editMode && draft.templateId) {
     const ok = applyTemplate(draft.templateId);
     if (ok) toastOk(t('onb.templateApplied'));
   }
@@ -222,30 +221,38 @@ function commit() {
 }
 
 function navButtons() {
-  if (step === 0) {
-    return h(
-      'div.row.row--between',
-      h('span.muted', `1 / ${STEPS.length}`),
-      h('button.btn.btn--primary', { onclick: () => { step = 1; refresh(); } }, t('onb.next'), icon('chevron', 16))
+  const backTo = (n) => () => { step = n; refresh(); };
+  const rows = [];
+
+  if (step > 0) {
+    rows.push(h('button.btn.btn--ghost', { onclick: backTo(step - 1) }, icon('chevron', 16), t('onb.back')));
+  } else if (editMode) {
+    rows.push(h('button.btn.btn--ghost', { onclick: () => navigate('settings') }, t('common.cancel')));
+  }
+
+  if (step < STEPS.length - 1) {
+    rows.push(h('button.btn.btn--primary', { onclick: backTo(step + 1) }, t('onb.next'), icon('chevron', 16)));
+  } else {
+    rows.push(
+      h('button.btn.btn--primary', { onclick: commit }, icon('check', 16),
+        editMode ? t('common.save') : t('onb.finish'))
     );
   }
-  if (step === 1) {
-    return h(
-      'div.row.row--between',
-      h('button.btn.btn--ghost', { onclick: () => { step = 0; refresh(); } }, icon('chevron', 16), t('onb.back')),
-      h('button.btn.btn--primary', { onclick: () => { step = 2; refresh(); } }, t('onb.next'), icon('chevron', 16))
-    );
-  }
+
   return h(
-    'div.row.row--between',
-    h('button.btn.btn--ghost', { onclick: () => { step = 1; refresh(); } }, icon('chevron', 16), t('onb.back')),
-    h('div.row', h('button.btn.btn--ghost', { onclick: commit }, t('onb.skip')), h('button.btn.btn--primary', { onclick: commit }, icon('check', 16), t('onb.finish')))
+    'div.onb__nav',
+    h('span.muted', `${step + 1} / ${STEPS.length}`),
+    h('div.row', ...rows)
   );
 }
 
-export function render(_params, _ctx) {
+export function render(params, ctx) {
+  editMode = params?.edit === '1';
   if (!draft) draft = freshDraft();
   const view = h('div.view');
+  // Each step is its own screen, so a step change animates while an in-place
+  // pick (handled inside choiceGroup) does not re-render anything at all.
+  view.dataset.screen = `onboarding:${editMode ? 'edit' : 'new'}:${step}`;
   const titles = [t('onb.step1'), t('onb.step2'), t('onb.step3')];
   const texts = [t('onb.step1Text'), t('onb.step2Text'), t('onb.step3Text')];
 
@@ -255,14 +262,14 @@ export function render(_params, _ctx) {
       'div.onb',
       h(
         'div.onb__steps',
+        { role: 'progressbar', 'aria-valuenow': step + 1, 'aria-valuemin': 1, 'aria-valuemax': STEPS.length },
         ...STEPS.map((_, i) => h('i', { class: i <= step ? 'is-active' : '' }))
       ),
-      h('div', h('h1.onb__title', titles[step]), h('p.onb__text', texts[step])),
+      h('div.onb__head', h('h1.onb__title', titles[step]), h('p.onb__text', texts[step])),
       h('div.card.card--pad-lg', STEPS[step]()),
       navButtons()
     )
   );
-  enterView(view);
   return view;
 }
 

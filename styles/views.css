@@ -166,6 +166,10 @@
 /* ============ HERO (dashboard) ============ */
 .hero {
   display: grid;
+  /* An implicit `auto` track is sized by max-content, so the greeting row
+     measured 330px inside a 320px viewport. Pinning the track to 1fr with a
+     0 minimum lets the row wrap instead of overflowing. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--sp-5);
   padding: var(--sp-5);
   border-radius: var(--r-xl);
@@ -193,9 +197,12 @@
   gap: var(--sp-4);
   flex-wrap: wrap;
 }
+/* `min-width: 200px` pinned the greeting block: at 320–360px the row refused to
+   shrink and pushed the whole head past the viewport. A shrinkable basis lets
+   it drop onto its own line instead. */
 .hero__greet {
-  flex: 1;
-  min-width: 200px;
+  flex: 1 1 200px;
+  min-width: 0;
 }
 .hero__eyebrow {
   font-size: var(--fs-2xs);
@@ -395,7 +402,7 @@
   border-color: color-mix(in srgb, var(--accent-1) 40%, transparent);
   transform: translateY(-2px);
 }
-.tpl-card[aria-pressed='true'] {
+.tpl-card[aria-checked='true'] {
   border-color: color-mix(in srgb, var(--accent-1) 60%, transparent);
   background: var(--accent-1-soft);
 }
@@ -1332,6 +1339,23 @@ input[type='range']::-moz-range-thumb {
 }
 .onb__steps i.is-active {
   background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+}
+.onb__head {
+  display: grid;
+  gap: 4px;
+}
+/* The step counter used to sit in a row with the buttons, which left the
+   buttons hanging off-centre on narrow screens. It is now its own line so the
+   action row can keep a consistent trailing edge. */
+.onb__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+.onb__nav .row {
+  margin-left: auto;
 }
 .onb__title {
   font-size: var(--fs-2xl);

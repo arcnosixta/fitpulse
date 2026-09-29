@@ -5,7 +5,7 @@ import { t } from '../core/i18n.js';
 import { getState, todayKey } from '../core/store.js';
 import { num, DOW, relativeDay } from '../core/format.js';
 import { navigate, refresh } from '../core/router.js';
-import { enterView, stagger } from '../core/anim.js';
+import { stagger } from '../core/anim.js';
 import { ring } from '../ui/charts.js';
 import { section, stat, empty, macroRow, kcalBig } from '../ui/bits.js';
 import { exerciseGlyph } from '../ui/exercise.js';
@@ -18,7 +18,7 @@ import { dayTotals, targets, addWater, setWater } from '../core/nutrition.js';
 const nameOf = (id) => exName(getExercise(id));
 const glyphOf = (id) => exerciseGlyph(getExercise(id));
 
-export function render(_params, _ctx) {
+export function render(_params, ctx) {
   const state = getState();
   const profile = state.profile;
   const view = h('div.view');
@@ -40,7 +40,7 @@ export function render(_params, _ctx) {
     h(
       'div.hero__head',
       h(
-        'div',
+        'div.hero__greet',
         h('p.hero__eyebrow', `${greeting} ${t(greetKey)}`),
         h('h1.hero__title', profile.name ? `${profile.name}!` : t('app.tagline')),
         h('p.hero__sub', relativeDay(todayKey()))
@@ -308,7 +308,6 @@ export function render(_params, _ctx) {
   );
 
   mount(view, hero, strip, planSection, quick, nutHero);
-  enterView(view);
-  stagger(view.querySelectorAll('.card, .section'));
+  if (ctx.routeChanged) stagger(view.querySelectorAll('.card, .section'));
   return view;
 }

@@ -4,7 +4,7 @@ import { h, mount, icon, clear } from '../core/dom.js';
 import { t } from '../core/i18n.js';
 import { num } from '../core/format.js';
 import { refresh } from '../core/router.js';
-import { enterView, stagger } from '../core/anim.js';
+import { stagger } from '../core/anim.js';
 import { section, empty } from '../ui/bits.js';
 import { exerciseCard, exerciseGlyph, openExerciseSheet } from '../ui/exercise.js';
 import { muscleMap } from '../ui/muscle.js';
@@ -225,7 +225,7 @@ function mapPanel() {
   );
 }
 
-export function render(_params, _ctx) {
+export function render(_params, ctx) {
   const view = h('div.view');
   repaint = () => {};
 
@@ -242,7 +242,6 @@ export function render(_params, _ctx) {
     results(),
     mapPanel()
   );
-  enterView(view);
-  stagger(view.querySelectorAll('.ex-card'));
+  if (ctx.routeChanged) stagger(view.querySelectorAll('.ex-card'));
   return view;
 }

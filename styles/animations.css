@@ -204,7 +204,11 @@
 }
 
 /* ---------- view transitions ---------- */
-.view {
+/* The entrance plays on a route change only. It used to sit on `.view`, which
+   every view bakes into its own markup, so any `refresh()` — the old way to
+   react to a tap on "пол" or "цель" — rebuilt the node and replayed the whole
+   12px slide. The router adds `.view--enter` when the route actually changed. */
+.view--enter {
   animation: view-in var(--t-view) var(--e-out) both;
 }
 @keyframes view-in {

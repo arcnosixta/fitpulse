@@ -5,7 +5,7 @@ import { t } from '../core/i18n.js';
 import { getState, update, todayKey } from '../core/store.js';
 import { num, weight as fmtWeight, signed, formatDate, toDisplayWeight, currentUnits } from '../core/format.js';
 import { refresh } from '../core/router.js';
-import { enterView, stagger } from '../core/anim.js';
+import { stagger } from '../core/anim.js';
 import { openSheet, toastOk } from '../core/ui.js';
 import { section, stat, empty } from '../ui/bits.js';
 import { lineChart, barChart, heatCalendar, sparkline } from '../ui/charts.js';
@@ -306,7 +306,7 @@ function measureTab() {
 }
 
 /* ------------------------------ view ------------------------------ */
-export function render(_params, _ctx) {
+export function render(_params, ctx) {
   const view = h('div.view');
   const week = logsThisWeek();
   const body = tab === 'weight' ? weightTab() : tab === 'volume' ? volumeTab() : tab === 'prs' ? prsTab() : measureTab();
@@ -336,7 +336,6 @@ export function render(_params, _ctx) {
     ),
     h('div.section', body)
   );
-  enterView(view);
-  stagger(view.querySelectorAll('.card'));
+  if (ctx.routeChanged) stagger(view.querySelectorAll('.card'));
   return view;
 }

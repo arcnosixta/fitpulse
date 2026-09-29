@@ -153,10 +153,13 @@ function showApp() {
   }
 }
 
-function guard({ id }) {
+function guard({ id, params }) {
   const onboarded = getState().profile.onboarded === true;
   if (id === 'onboarding') {
-    if (onboarded) {
+    // #/onboarding?edit=1 stays reachable once the profile exists. Without it a
+    // mistake made in setup could never be corrected, because the guard bounced
+    // every attempt straight back to the dashboard.
+    if (onboarded && params?.edit !== '1') {
       navigate('dashboard');
       return false;
     }

@@ -5,7 +5,7 @@ import { t, setLang, getLang, applyI18n } from '../core/i18n.js';
 import { getState, patch, resetAll, exportJson, importJson, storageUsage } from '../core/store.js';
 import { num, currentUnits, setUnitSystem, toDisplayLength, toDisplayWeight, fromDisplayLength, fromDisplayWeight } from '../core/format.js';
 import { refresh, navigate } from '../core/router.js';
-import { enterView, stagger } from '../core/anim.js';
+import { stagger } from '../core/anim.js';
 import { confirmDialog, toastOk, toastErr, toastWarn } from '../core/ui.js';
 import { section, badge } from '../ui/bits.js';
 import { settingRow, toggleSwitch, openPrompt, choiceModal } from '../ui/forms.js';
@@ -55,7 +55,7 @@ function editProfile() {
       {
         key: 'sex',
         label: t('onb.sex'),
-        type: 'select',
+        type: 'segmented',
         value: p.sex,
         options: [
           ['male', t('onb.male')],
@@ -238,7 +238,7 @@ async function wipeAll() {
 }
 
 /* ------------------------------ view ------------------------------ */
-export function render(_params, _ctx) {
+export function render(_params, ctx) {
   const view = h('div.view');
   const s = getState().settings;
   const p = getState().profile;
@@ -288,6 +288,13 @@ export function render(_params, _ctx) {
               sub: `${p.meals} × ${t('nut.perDay')}`,
               control: icon('chevron', 18),
               onClick: editMeals,
+            }),
+            settingRow({
+              glyph: 'refresh',
+              title: t('onb.editProfile'),
+              sub: t('onb.editProfileText'),
+              control: icon('chevron', 18),
+              onClick: () => navigate('onboarding', { edit: '1' }),
             })
           )
         ),
@@ -497,7 +504,6 @@ export function render(_params, _ctx) {
       )
     )
   );
-  enterView(view);
-  stagger(view.querySelectorAll('.card'));
+  if (ctx.routeChanged) stagger(view.querySelectorAll('.card'));
   return view;
 }

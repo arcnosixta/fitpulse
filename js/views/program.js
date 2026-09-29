@@ -5,7 +5,7 @@ import { t } from '../core/i18n.js';
 import { getState } from '../core/store.js';
 import { DOW } from '../core/format.js';
 import { refresh } from '../core/router.js';
-import { enterView, stagger } from '../core/anim.js';
+import { stagger } from '../core/anim.js';
 import { openModal, confirmDialog, toastOk } from '../core/ui.js';
 import { section, empty } from '../ui/bits.js';
 import { openExerciseSheet, openExercisePicker, exerciseGlyph } from '../ui/exercise.js';
@@ -364,13 +364,12 @@ function tplTab() {
 }
 
 /* ------------------------------ view ------------------------------ */
-export function render(_params, _ctx) {
+export function render(_params, ctx) {
   const view = h('div.view');
   const body =
     tab === 'week' ? weekTab() : tab === 'vol' ? volTab() : tplTab();
 
   mount(view, header(), segmented(), h('div.section', body));
-  enterView(view);
-  stagger(view.querySelectorAll('.card, .day-col, .tpl-card'));
+  if (ctx.routeChanged) stagger(view.querySelectorAll('.card, .day-col, .tpl-card'));
   return view;
 }

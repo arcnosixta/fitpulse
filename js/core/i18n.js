@@ -328,6 +328,7 @@ const dict = {
     'onb.back': 'Назад',
     'onb.recalc': 'Пересчитать',
     'onb.editProfile': 'Изменить данные',
+    'onb.editProfileText': 'Пройти настройку заново — пол, рост, вес, цель',
     'onb.trainingDays': 'Тренировок в неделю',
 
     'act.sedentary': 'Минимальная активность',
@@ -696,6 +697,7 @@ const dict = {
     'onb.back': 'Back',
     'onb.recalc': 'Recalculate',
     'onb.editProfile': 'Edit details',
+    'onb.editProfileText': 'Redo the setup — sex, height, weight, goal',
     'onb.trainingDays': 'Training days per week',
 
     'act.sedentary': 'Sedentary',

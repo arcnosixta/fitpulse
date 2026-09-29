@@ -1,6 +1,6 @@
 {
   "name": "fitpulse",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "FitPulse — офлайн-трекер тренировок и питания с корректными калькуляторами. PWA + Android (.apk), без рекламы, open source.",
   "type": "module",
   "license": "MIT",

@@ -5,7 +5,7 @@ import { t } from '../core/i18n.js';
 import { getState, todayKey } from '../core/store.js';
 import { num, formatDate, relativeDay, grams } from '../core/format.js';
 import { refresh } from '../core/router.js';
-import { enterView, stagger } from '../core/anim.js';
+import { stagger } from '../core/anim.js';
 import { openModal, openSheet, toastOk, haptic } from '../core/ui.js';
 import { section, macroRow, kcalBig, stat } from '../ui/bits.js';
 import { lineChart, ring as ringChart } from '../ui/charts.js';
@@ -421,8 +421,11 @@ function microTab() {
 }
 
 /* ------------------------------ view ------------------------------ */
-export function render(_params, _ctx) {
+export function render(_params, ctx) {
   const view = h('div.view');
+  // Switching day or tab swaps the whole content, so it counts as a new screen;
+  // logging water or a macro edit reuses it and must stay still.
+  view.dataset.screen = `nutrition:${tab}:${dayKey}`;
   const totals = dayTotals(dayKey);
 
   mount(
@@ -450,7 +453,6 @@ export function render(_params, _ctx) {
     ),
     tab === 'log' ? logTab() : tab === 'week' ? weekTab() : microTab()
   );
-  enterView(view);
-  stagger(view.querySelectorAll('.card, .meal-card'));
+  if (ctx.routeChanged) stagger(view.querySelectorAll('.card, .meal-card'));
   return view;
 }

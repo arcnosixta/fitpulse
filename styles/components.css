@@ -60,13 +60,16 @@
   color: var(--accent-1);
 }
 .btn--sm {
-  --btn-h: 34px;
+  /* 36px, not the 34px this used to be: the water stepper and the +/- pickers
+     are tapped repeatedly, and 34px sat uncomfortably under the 40px default. */
+  --btn-h: 36px;
+  min-width: 40px;
   padding: 0 var(--sp-3);
   font-size: var(--fs-xs);
   border-radius: var(--r-xs);
 }
 .btn--xs {
-  --btn-h: 28px;
+  --btn-h: 32px;
   padding: 0 10px;
   font-size: var(--fs-2xs);
   border-radius: var(--r-xs);
@@ -87,8 +90,8 @@
   border-radius: var(--r-sm);
 }
 .btn--icon.btn--sm {
-  --btn-h: 32px;
-  width: 32px;
+  --btn-h: 36px;
+  width: 36px;
 }
 .btn[disabled] {
   opacity: 0.45;
@@ -186,11 +189,22 @@
 .grid--2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+/* These count columns are fixed, not fluid. `auto-fit` with a 150px floor
+   resolved to two 228px tracks inside a 326px card on the onboarding summary,
+   so the whole screen grew to 545px and the right half of every line was cut
+   off. `minmax(0, 1fr)` lets the tracks shrink to the container instead. */
 .grid--3 {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 .grid--4 {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 118px), 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+/* Grid and flex children default to min-width:auto, i.e. they refuse to shrink
+   below their min-content width. That is what let the tracks above blow out. */
+.grid > *,
+.stack > *,
+.choices > * {
+  min-width: 0;
 }
 .stack {
   display: flex;
@@ -270,6 +284,7 @@
   color: var(--text-1);
   border-color: var(--line-strong);
 }
+.chip[aria-checked='true'],
 .chip[aria-pressed='true'] {
   color: var(--text-inv);
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
@@ -305,18 +320,24 @@
   color: var(--text-3);
   transition: color var(--t-fast);
 }
-.segmented button[aria-selected='true'] {
+.segmented button[aria-checked='true'] {
   color: var(--text-1);
 }
 .segmented__pill {
   position: absolute;
   z-index: 0;
-  top: 4px;
-  bottom: 4px;
+  /* Geometry comes from the active button's rect, so no offset guessing here:
+     JS sets width, height and the translate for both axes. */
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
   border-radius: 10px;
   background: var(--surface-2);
   border: 1px solid var(--line);
-  transition: transform var(--t-mid) var(--e-spring), width var(--t-mid) var(--e-spring);
+  transition: transform var(--t-mid) var(--e-spring), width var(--t-mid) var(--e-spring),
+    height var(--t-mid) var(--e-spring);
 }
 
 /* ---------- forms ---------- */
@@ -567,6 +588,24 @@ select.input {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+/* Compact variant for count grids: three stats across a 326px card leaves about
+   100px per column, where the full padding and --fs-lg pushed the value out of
+   its box. */
+.grid--3 > .stat,
+.grid--4 > .stat {
+  padding: var(--sp-2) var(--sp-3);
+  gap: 1px;
+}
+.grid--3 > .stat .stat__value,
+.grid--4 > .stat .stat__value {
+  font-size: var(--fs-md);
+}
+.grid--3 > .stat .stat__label,
+.grid--4 > .stat .stat__label {
+  font-size: 10px;
+  line-height: 1.25;
 }
 .stat__unit {
   font-size: var(--fs-xs);

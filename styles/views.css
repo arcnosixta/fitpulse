@@ -608,7 +608,7 @@
 /* ============ LOGGER ============ */
 .log-top {
   position: sticky;
-  top: calc(var(--topbar-h) + var(--safe-t));
+  top: calc(var(--topbar-h) + var(--top-gap));
   z-index: 30;
   display: flex;
   align-items: center;

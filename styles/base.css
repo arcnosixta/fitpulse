@@ -174,8 +174,8 @@ canvas {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
-  height: calc(var(--topbar-h) + var(--safe-t));
-  padding: var(--safe-t) var(--sp-4) 0;
+  height: calc(var(--topbar-h) + var(--top-gap));
+  padding: var(--top-gap) var(--sp-4) 0;
   margin-bottom: var(--sp-4);
   background: linear-gradient(var(--bg-1) 40%, transparent);
   backdrop-filter: blur(14px) saturate(130%);

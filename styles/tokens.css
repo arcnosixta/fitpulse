@@ -51,6 +51,10 @@
   --shell-max: 1320px;
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-t: env(safe-area-inset-top, 0px);
+  /* Space reserved above the topbar. On phones the topbar is the first thing in
+     the viewport, so it must not sit flush against the top edge even when the
+     browser reports no safe-area inset (a normal Chrome tab never does). */
+  --top-gap: var(--safe-t);
 
   /* semantic surfaces (dark = default) */
   --bg-0: #070810;
@@ -160,4 +164,11 @@
 }
 [data-theme='light'] .ambient__grain {
   opacity: 0.25;
+}
+
+/* ---------- phone top clearance ---------- */
+@media (max-width: 899px) {
+  :root {
+    --top-gap: max(var(--safe-t), var(--sp-3));
+  }
 }

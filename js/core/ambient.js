@@ -1,15 +1,13 @@
-/** Animated ambient background (canvas particle field). */
+/** Ambient background (a static canvas particle field, painted once). */
 
 import { $ } from './dom.js';
 
-let raf = null;
 let canvas = null;
 let ctx = null;
 let dots = [];
 let w = 0;
 let h_ = 0;
 let dpr = 1;
-let reduce = false;
 
 const COLORS = () => {
   const cs = getComputedStyle(document.documentElement);
@@ -41,22 +39,15 @@ function resize() {
   }));
 }
 
-function frame() {
+function draw() {
   ctx.clearRect(0, 0, w, h_);
   for (const d of dots) {
-    d.x += d.vx;
-    d.y += d.vy;
-    if (d.x < -10) d.x = w + 10;
-    if (d.x > w + 10) d.x = -10;
-    if (d.y < -10) d.y = h_ + 10;
-    if (d.y > h_ + 10) d.y = -10;
     ctx.beginPath();
     ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
     ctx.fillStyle = d.c;
     ctx.globalAlpha = d.a;
     ctx.fill();
   }
-  ctx.globalAlpha = 1;
   // connecting lines keep the field from looking like noise
   ctx.lineWidth = 1;
   for (let i = 0; i < dots.length; i++) {
@@ -75,7 +66,6 @@ function frame() {
     }
   }
   ctx.globalAlpha = 1;
-  raf = requestAnimationFrame(frame);
 }
 
 export function startAmbient() {
@@ -87,40 +77,22 @@ export function startAmbient() {
     canvas.hidden = true;
     return;
   }
-  reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   resize();
   window.addEventListener('resize', () => {
     clearTimeout(canvas._t);
-    canvas._t = setTimeout(resize, 200);
+    canvas._t = setTimeout(() => {
+      resize();
+      draw();
+    }, 200);
   });
   document.addEventListener('fitpulse:accent', () => {
     const colors = COLORS();
     dots.forEach((d, i) => (d.c = colors[i % colors.length]));
+    draw();
   });
-  if (reduce) {
-    drawStatic();
-    return;
-  }
-  frame();
-  // pause when the tab is hidden to save battery
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      cancelAnimationFrame(raf);
-      raf = null;
-    } else if (!raf) {
-      frame();
-    }
-  });
-}
-
-function drawStatic() {
-  ctx.clearRect(0, 0, w, h_);
-  for (const d of dots) {
-    ctx.beginPath();
-    ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-    ctx.fillStyle = d.c;
-    ctx.globalAlpha = d.a;
-    ctx.fill();
-  }
-  ctx.globalAlpha = 1;
+  // Painted once and left alone. This used to be a requestAnimationFrame loop
+  // repainting up to 70 dots plus ~2400 stroked connector lines every frame,
+  // which ran continuously behind the page and made scrolling stutter on
+  // mid-range phones. The background is decoration, so a still frame is enough.
+  draw();
 }

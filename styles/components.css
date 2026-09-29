@@ -125,8 +125,6 @@
   border-radius: var(--r-lg);
   background: var(--surface);
   border: 1px solid var(--line);
-  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
   box-shadow: var(--shadow-1);
   transition: transform var(--t-mid) var(--e-out), border-color var(--t-mid),
     box-shadow var(--t-mid);
@@ -1106,8 +1104,6 @@ kbd {
 .glass {
   background: var(--surface);
   border: 1px solid var(--line);
-  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
 }
 .glass--soft {
   background: color-mix(in srgb, var(--surface-solid) 55%, transparent);

@@ -9,7 +9,7 @@ import { getState } from './core/store.js';
 import { setUnitSystem } from './core/format.js';
 import { applyTheme, applyLanguage } from './core/theme.js';
 import {
-  defineRoutes, setRouterOutlet, startRouter, onRouteChange, setRouteGuard, navigate,
+  defineRoutes, setRouterOutlet, startRouter, onRouteChange, setRouteGuard, navigate, currentRoute,
 } from './core/router.js';
 import { startAmbient } from './core/ambient.js';
 import { attachRipple, play } from './core/anim.js';
@@ -182,6 +182,7 @@ function boot() {
   syncNav(rail, tabbar);
 
   onRouteChange(() => {
+    document.body.dataset.route = currentRoute().id;
     syncNav(rail, tabbar);
   });
 

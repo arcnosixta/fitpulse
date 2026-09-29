@@ -174,8 +174,6 @@
     radial-gradient(100% 100% at 0% 100%, var(--accent-1-soft), transparent 55%),
     var(--surface);
   border: 1px solid var(--line);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
   box-shadow: var(--shadow-2);
   overflow: hidden;
   position: relative;
@@ -613,19 +611,13 @@
 
 /* ============ LOGGER ============ */
 .log-top {
-  position: sticky;
-  top: calc(var(--topbar-h) + var(--top-gap));
-  z-index: 30;
   display: flex;
   align-items: center;
   gap: var(--sp-3);
   padding: var(--sp-3);
   border-radius: var(--r-md);
-  background: color-mix(in srgb, var(--surface-solid) 84%, transparent);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--surface);
   border: 1px solid var(--line);
-  box-shadow: var(--shadow-2);
 }
 .log-top__title {
   flex: 1;

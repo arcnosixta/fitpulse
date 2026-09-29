@@ -11,7 +11,13 @@
  *   { type: 'GET_VERSION' }   → answer with the current cache version
  */
 
-const VERSION = 'v1';
+/**
+ * Bump on every deploy that changes the shell. A byte-identical sw.js is not
+ * reinstalled by the browser, and the shell is served stale-while-revalidate,
+ * so without this bump users would keep the previous CSS/JS for a full reload
+ * cycle after a deploy.
+ */
+const VERSION = 'v2';
 const CACHE = `fitpulse-${VERSION}`;
 
 /** The app shell. Keep this list in sync with the file tree. */

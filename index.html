@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru" data-theme="dark" data-accent="volt">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5"
+    />
+    <title>FitPulse — трекер тренировок и питания</title>
+    <meta
+      name="description"
+      content="FitPulse — офлайн-трекер тренировок и питания: расписание, библиотека упражнений, калькуляторы BMR/TDEE/БЖУ, прогресс. Без рекламы и подписки."
+    />
+    <meta name="theme-color" content="#0A0C14" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="FitPulse" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="assets/manifest.webmanifest" />
+    <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+
+    <link rel="stylesheet" href="styles/tokens.css" />
+    <link rel="stylesheet" href="styles/base.css" />
+    <link rel="stylesheet" href="styles/components.css" />
+    <link rel="stylesheet" href="styles/views.css" />
+    <link rel="stylesheet" href="styles/animations.css" />
+  </head>
+  <body>
+    <!-- ambient animated background -->
+    <div class="ambient" aria-hidden="true">
+      <canvas id="fx-canvas" class="ambient__canvas"></canvas>
+      <div class="ambient__mesh"></div>
+      <div class="ambient__grain"></div>
+    </div>
+
+    <!-- install / update prompts -->
+    <div id="install-bar" class="install-bar" hidden>
+      <span class="install-bar__text" data-i18n="install.text">Установить приложение</span>
+      <div class="install-bar__actions">
+        <button class="btn btn--ghost btn--sm" data-action="install-dismiss" data-i18n="common.later">
+          Позже
+        </button>
+        <button class="btn btn--primary btn--sm" data-action="install-accept" data-i18n="install.accept">
+          Установить
+        </button>
+      </div>
+    </div>
+
+    <div id="app" class="app" hidden>
+      <aside class="rail" id="rail" aria-label="Основная навигация"></aside>
+
+      <main class="main" id="main" tabindex="-1">
+        <div class="views" id="views" role="region" aria-live="polite"></div>
+      </main>
+
+      <nav class="tabbar" id="tabbar" aria-label="Навигация"></nav>
+    </div>
+
+    <!-- boot / onboarding -->
+    <div id="boot" class="boot">
+      <div class="boot__logo" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="64" height="64">
+          <defs>
+            <linearGradient id="bootGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--accent-1)" />
+              <stop offset="1" stop-color="var(--accent-2)" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M36 4 16 36h12l-4 24 20-32H32z"
+            fill="url(#bootGrad)"
+            stroke="none"
+          />
+        </svg>
+      </div>
+      <div class="boot__bar"><i></i></div>
+      <p class="boot__hint" data-i18n="boot.loading">Загружаем трекер…</p>
+    </div>
+
+    <div id="modal-root" class="modal-root" aria-live="polite"></div>
+    <div id="sheet-root" class="sheet-root" aria-live="polite"></div>
+    <div id="toast-root" class="toast-root" role="status" aria-live="polite"></div>
+
+    <script type="module" src="js/app.js"></script>
+    <noscript>
+      <p style="padding: 24px; color: #fff; font: 16px system-ui">
+        FitPulse требует JavaScript. Включите его в настройках браузера.
+      </p>
+    </noscript>
+  </body>
+</html>

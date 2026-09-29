@@ -1,0 +1,47 @@
+{
+  "name": "fitpulse",
+  "version": "0.1.0",
+  "description": "FitPulse — офлайн-трекер тренировок и питания с корректными калькуляторами. PWA + Android (.apk), без рекламы, open source.",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs",
+    "build": "node scripts/build-web.mjs",
+    "icons": "node scripts/gen-icons.mjs",
+    "icons:android": "node scripts/gen-android-assets.mjs",
+    "check": "npm run check:imports && npm run check:data && npm run check:i18n && npm run check:calculators",
+    "check:imports": "node scripts/check-imports.mjs",
+    "check:data": "node scripts/check-data.mjs",
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "check:calculators": "node scripts/check-calculators.mjs",
+    "check:smoke": "node scripts/smoke-dom.mjs",
+    "verify": "npm run check && npm run check:smoke && npm run icons && npm run icons:android && npm run build",
+    "android:add": "npx --yes @capacitor/cli add android",
+    "android:sync": "npx --yes @capacitor/cli sync android",
+    "android:open": "npx --yes @capacitor/cli open android",
+    "apk": "bash scripts/build-apk.sh",
+    "apk:release": "bash scripts/build-apk.sh release"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "jsdom": "^30.1.1"
+  },
+  "keywords": [
+    "fitness",
+    "workout-tracker",
+    "nutrition",
+    "bmr",
+    "tdee",
+    "offline",
+    "pwa",
+    "capacitor"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arcnosixta/fitpulse.git"
+  }
+}

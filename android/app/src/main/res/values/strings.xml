@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">FitPulse</string>
+    <string name="title_activity_main">FitPulse</string>
+    <string name="package_name">app.fitpulse.tracker</string>
+    <string name="custom_url_scheme">app.fitpulse.tracker</string>
+</resources>

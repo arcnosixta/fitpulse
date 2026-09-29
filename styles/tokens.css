@@ -1,0 +1,163 @@
+/* =========================================================
+   FitPulse — design tokens
+   ========================================================= */
+:root {
+  /* type scale */
+  --font-ui: 'Inter', 'SF Pro Display', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-num: 'SF Mono', 'JetBrains Mono', ui-monospace, 'Roboto Mono', monospace;
+
+  --fs-2xs: 0.6875rem; /* 11 */
+  --fs-xs: 0.75rem; /* 12 */
+  --fs-sm: 0.8125rem; /* 13 */
+  --fs-md: 0.9375rem; /* 15 */
+  --fs-lg: 1.0625rem; /* 17 */
+  --fs-xl: 1.375rem; /* 22 */
+  --fs-2xl: 1.75rem; /* 28 */
+  --fs-3xl: 2.25rem; /* 36 */
+  --fs-4xl: 3rem; /* 48 */
+
+  /* spacing (4pt grid) */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.25rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+
+  /* radii */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 30px;
+  --r-full: 999px;
+
+  /* motion */
+  --e-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --e-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --e-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast: 140ms;
+  --t-mid: 260ms;
+  --t-slow: 460ms;
+  --t-view: 420ms;
+
+  /* layout */
+  --rail-w: 260px;
+  --tabbar-h: 68px;
+  --topbar-h: 62px;
+  --shell-max: 1320px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+
+  /* semantic surfaces (dark = default) */
+  --bg-0: #070810;
+  --bg-1: #0a0c14;
+  --bg-2: #10131f;
+  --surface: rgba(255, 255, 255, 0.045);
+  --surface-2: rgba(255, 255, 255, 0.075);
+  --surface-solid: #151928;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  --text-1: #f2f4fb;
+  --text-2: #a8b0c7;
+  --text-3: #6f7793;
+  --text-inv: #07080f;
+
+  --ok: #2ee6a8;
+  --warn: #ffc046;
+  --danger: #ff5c7c;
+  --info: #55b8ff;
+
+  /* macro colors */
+  --mac-p: #ff6b8a;
+  --mac-f: #ffc046;
+  --mac-c: #55b8ff;
+  --mac-fib: #2ee6a8;
+
+  /* accents */
+  --accent-1: #b6ff3a;
+  --accent-2: #35e0ff;
+  --accent-3: #7a5cff;
+  --accent-1-soft: rgba(182, 255, 58, 0.14);
+  --accent-2-soft: rgba(53, 224, 255, 0.14);
+  --accent-glow: rgba(182, 255, 58, 0.35);
+
+  --glass-blur: 18px;
+  --shadow-1: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 12px 34px rgba(0, 0, 0, 0.45);
+  --shadow-3: 0 26px 70px rgba(0, 0, 0, 0.55);
+  --ring: 0 0 0 1px var(--line);
+}
+
+/* ---------- accent themes ---------- */
+[data-accent='magma'] {
+  --accent-1: #ff7a45;
+  --accent-2: #ff3d81;
+  --accent-3: #b026ff;
+  --accent-1-soft: rgba(255, 122, 69, 0.15);
+  --accent-2-soft: rgba(255, 61, 129, 0.15);
+  --accent-glow: rgba(255, 122, 69, 0.35);
+}
+[data-accent='ice'] {
+  --accent-1: #6be8ff;
+  --accent-2: #5b7cff;
+  --accent-3: #b06bff;
+  --accent-1-soft: rgba(107, 232, 255, 0.15);
+  --accent-2-soft: rgba(91, 124, 255, 0.15);
+  --accent-glow: rgba(107, 232, 255, 0.35);
+}
+[data-accent='sunset'] {
+  --accent-1: #ffd166;
+  --accent-2: #ff6b6b;
+  --accent-3: #ff9f45;
+  --accent-1-soft: rgba(255, 209, 102, 0.15);
+  --accent-2-soft: rgba(255, 107, 107, 0.15);
+  --accent-glow: rgba(255, 209, 102, 0.32);
+}
+[data-accent='mint'] {
+  --accent-1: #5cf2b6;
+  --accent-2: #35e0ff;
+  --accent-3: #4bd18a;
+  --accent-1-soft: rgba(92, 242, 182, 0.15);
+  --accent-2-soft: rgba(53, 224, 255, 0.15);
+  --accent-glow: rgba(92, 242, 182, 0.3);
+}
+
+/* ---------- light theme ---------- */
+[data-theme='light'] {
+  --bg-0: #eef1f7;
+  --bg-1: #f6f8fc;
+  --bg-2: #ffffff;
+  --surface: rgba(16, 22, 40, 0.035);
+  --surface-2: rgba(16, 22, 40, 0.06);
+  --surface-solid: #ffffff;
+  --line: rgba(16, 22, 40, 0.1);
+  --line-strong: rgba(16, 22, 40, 0.18);
+
+  --text-1: #0d1120;
+  --text-2: #4a5470;
+  --text-3: #7d87a1;
+  --text-inv: #ffffff;
+
+  --ok: #0aa876;
+  --warn: #c98200;
+  --danger: #e03154;
+  --info: #1f7fd4;
+
+  --mac-p: #e03e63;
+  --mac-f: #d18a00;
+  --mac-c: #1f7fd4;
+  --mac-fib: #0aa876;
+
+  --shadow-1: 0 2px 8px rgba(20, 28, 50, 0.06);
+  --shadow-2: 0 12px 30px rgba(20, 28, 50, 0.1);
+  --shadow-3: 0 26px 60px rgba(20, 28, 50, 0.14);
+  --ring: 0 0 0 1px var(--line);
+}
+[data-theme='light'] .ambient__grain {
+  opacity: 0.25;
+}

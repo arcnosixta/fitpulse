@@ -1,19 +1,54 @@
-# FitPulse
+<p align="center">
+  <img src="assets/icons/icon.svg" alt="FitPulse" width="112" height="112">
+</p>
 
-Офлайн-трекер тренировок и питания. PWA и Android (.apk), без рекламы, без
-аккаунта, без сервера. Все данные — только в `localStorage` устройства.
+<h1 align="center">FitPulse</h1>
 
-Без сборщика, без фреймворков и без runtime-зависимостей: чистый JavaScript,
-ES-модули, CSS и service worker. Node.js нужен только для проверок и сборки.
+<p align="center"><strong>Офлайн-трекер тренировок и питания.</strong><br>
+PWA и Android. Без рекламы, без аккаунта, без сервера.<br>
+Все данные остаются в <code>localStorage</code> устройства.</p>
 
-## Быстрый старт
+<p align="center">
+  <a href="https://github.com/arcnosixta/fitpulse/releases/latest">
+    <img alt="release" src="https://img.shields.io/github/v/release/arcnosixta/fitpulse?label=release&color=b6ff3a"></a>
+  <a href="https://github.com/arcnosixta/fitpulse/blob/main/LICENSE">
+    <img alt="license" src="https://img.shields.io/github/license/arcnosixta/fitpulse?color=35e0ff"></a>
+  <a href="https://github.com/arcnosixta/fitpulse/actions/workflows/pages.yml">
+    <img alt="deploy" src="https://github.com/arcnosixta/fitpulse/actions/workflows/pages.yml/badge.svg"></a>
+  <img alt="dependencies" src="https://img.shields.io/badge/runtime_dependencies-0-b6ff3a">
+  <img alt="bundle" src="https://img.shields.io/badge/web-620_KB-35e0ff">
+</p>
+
+## Попробовать
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**В браузере — PWA**
+
+Открыть <https://arcnosixta.github.io/fitpulse/> и установить как приложение:
+работает офлайн, данные не уходят с устройства.
+
+</td>
+<td width="50%" valign="top">
+
+**На Android — APK**
 
 ```bash
-npm install          # только dev-инструменты и Capacitor
-npm run dev          # http://localhost:4173
+# с компьютера
+adb install -r app-release.apk
+
+# или просто скачать файл и открыть его на телефоне
 ```
 
-Открывать нужно по HTTP: service worker не работает на `file://`.
+[Скачать последний релиз](https://github.com/arcnosixta/fitpulse/releases/latest) ·
+~3 МБ · Android 6.0+ · подписан тем же ключом, что и предыдущие версии,
+поэтому обновление ставится поверх
+
+</td>
+</tr>
+</table>
 
 ## Что внутри
 
@@ -31,6 +66,22 @@ npm run dev          # http://localhost:4173
 
 Дополнительно: тёмная и светлая темы, пять акцентов, RU/EN, метрическая и
 имперская система, полный экспорт данных в JSON, установка как PWA.
+
+## Подход
+
+Без сборщика, без фреймворков и без runtime-зависимостей: чистый JavaScript,
+ES-модули, CSS и service worker. Node.js нужен только для проверок и сборки.
+Графика и шрифты свои, без внешних CDN — приложение работает офлайн с первого
+запуска. Страницы статичные, анимация только на интерактивных элементах.
+
+## Быстрый старт
+
+```bash
+npm install          # только dev-инструменты и Capacitor
+npm run dev          # http://localhost:4173
+```
+
+Открывать нужно по HTTP: service worker не работает на `file://`.
 
 ## Проверки
 
@@ -57,19 +108,19 @@ npm run verify       # всё выше + иконки (веб и Android) + ве
 npm run build        # dist/ — только статика, без исходников и node_modules
 ```
 
-`scripts/build-web.mjs` собирает `dist/` и сверяет список precache из `sw.js`
-с фактическим содержимым: забытый в precache файл валит сборку.
+`scripts/build-web.mjs` собирает `dist/` (≈ 620 КБ) и сверяет список precache из
+`sw.js` с фактическим содержимым: забытый в precache файл валит сборку.
 
 ## Android
 
 ```bash
 npm run apk          # debug APK -> dist-apk/ (~4,1 МБ)
-npm run apk:release  # подписанный release APK (~3,1 МБ)
+npm run apk:release  # подписанный release APK (~3 МБ)
 ```
 
-Приложение офлайновое: в APK попадает только `dist/` (≈ 612 КБ), ни
-`node_modules`, ни исходников. Иконка лаунчера и splash генерируются из того
-же знака, что и PWA, — отдельной графики для Android нет.
+Приложение офлайновое: в APK попадает только `dist/`, ни `node_modules`, ни
+исходников. Иконка лаунчера и splash генерируются из того же знака, что и PWA, —
+отдельной графики для Android нет.
 
 Полная инструкция по SDK, JDK, подписи и решению проблем —
 в [docs/APK_BUILD.md](docs/APK_BUILD.md).
@@ -98,6 +149,8 @@ docs/                 формулы и сборка Android
   конвертация только в `toDisplay*`/`fromDisplay*`.
 - **Кривые и шрифты — свои.** Никаких внешних CDN: приложение работает офлайн
   с первого запуска.
+- **Производительность важнее декора.** Никакой анимации, которая крутится
+  сама по себе; фон рисуется один раз.
 
 ## Лицензия
 

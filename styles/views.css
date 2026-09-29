@@ -447,10 +447,16 @@
 }
 @media (min-width: 900px) {
   .prog-scroll {
-    grid-auto-columns: 1fr;
-    overflow-x: visible;
     margin-inline: 0;
     padding-inline: 0;
+  }
+}
+@media (min-width: 1240px) {
+  .prog-scroll {
+    grid-auto-columns: minmax(0, 1fr);
+  }
+  .day-col {
+    min-width: 0;
   }
 }
 .day-col {
